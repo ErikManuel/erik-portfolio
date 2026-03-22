@@ -4,18 +4,19 @@ import { projects } from '@/lib/projects';
 import { 
   Github, 
   ExternalLink, 
-  Calendar, 
-  User, 
-  Code2, 
-  Server, 
-  Wrench,
   ArrowLeft,
   CheckCircle2,
   AlertCircle,
   Lightbulb,
   Target,
   Shield,
-  Zap
+  Code2,
+  Server,
+  Wrench,
+  Database,
+  Box,
+  GitBranch,
+  Award
 } from 'lucide-react';
 
 export default async function ProjectDetailPage({
@@ -33,6 +34,18 @@ export default async function ProjectDetailPage({
   const t = (text: { en: string; es: string }) => 
     locale === 'es' ? text.es : text.en;
 
+  // Mapeo de íconos por tecnología
+  const getTechIcon = (tech: string) => {
+    const techLower = tech.toLowerCase();
+    if (techLower.includes('next') || techLower.includes('react')) return <Code2 className="w-4 h-4 text-blue-500" />;
+    if (techLower.includes('node') || techLower.includes('express')) return <Server className="w-4 h-4 text-green-500" />;
+    if (techLower.includes('mongo') || techLower.includes('sql') || techLower.includes('postgres')) return <Database className="w-4 h-4 text-yellow-500" />;
+    if (techLower.includes('type')) return <Box className="w-4 h-4 text-purple-500" />;
+    if (techLower.includes('git') || techLower.includes('test')) return <GitBranch className="w-4 h-4 text-gray-500" />;
+    if (techLower.includes('stripe')) return <Shield className="w-4 h-4 text-indigo-500" />;
+    return <Wrench className="w-4 h-4 text-gray-500" />;
+  };
+
   return (
     <>
       <Navbar locale={locale} />
@@ -41,21 +54,21 @@ export default async function ProjectDetailPage({
           {/* Botón para volver */}
           <a
             href={`/${locale}/projects`}
-            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors"
+            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors group"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             {locale === 'es' ? 'Volver a proyectos' : 'Back to projects'}
           </a>
 
           {/* Hero del proyecto */}
           <div className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
                 {t(project.title)}
               </h1>
               {project.featured && (
                 <span className="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-full flex items-center gap-1">
-                  <Zap className="w-4 h-4" />
+                  <Award className="w-4 h-4" />
                   {locale === 'es' ? 'Destacado' : 'Featured'}
                 </span>
               )}
@@ -65,13 +78,14 @@ export default async function ProjectDetailPage({
               {t(project.description)}
             </p>
 
-            {/* Tags de tecnologías */}
+            {/* Tags de tecnologías con íconos */}
             <div className="flex flex-wrap gap-2 mb-8">
               {project.techStack.map((tech) => (
                 <span
                   key={tech}
-                  className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium"
                 >
+                  {getTechIcon(tech)}
                   {tech}
                 </span>
               ))}
@@ -84,7 +98,7 @@ export default async function ProjectDetailPage({
                   href={project.links.live}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all hover:scale-105"
                 >
                   <ExternalLink className="w-5 h-5" />
                   {locale === 'es' ? 'Demo en vivo' : 'Live demo'}
@@ -94,7 +108,7 @@ export default async function ProjectDetailPage({
                 href={project.links.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-all hover:scale-105"
               >
                 <Github className="w-5 h-5" />
                 GitHub
@@ -102,46 +116,57 @@ export default async function ProjectDetailPage({
             </div>
           </div>
 
-          {/* Contenido principal - visible en ambos modos */}
-          <div className="space-y-12">
+          {/* Contenido principal */}
+          <div className="space-y-8">
             {/* Problema */}
-            <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <AlertCircle className="w-6 h-6 text-blue-600" />
-                {locale === 'es' ? 'Problema' : 'Problem'}
-              </h2>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {locale === 'es' 
-                  ? 'Descripción del problema que resuelve este proyecto...'
-                  : 'Description of the problem this project solves...'}
-              </p>
-            </section>
+            {project.problem && (
+              <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8 hover-lift">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <AlertCircle className="w-6 h-6 text-red-500" />
+                  {locale === 'es' ? 'Problema' : 'Problem'}
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {t(project.problem)}
+                </p>
+              </section>
+            )}
 
             {/* Solución */}
-            <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Lightbulb className="w-6 h-6 text-yellow-600" />
-                {locale === 'es' ? 'Solución' : 'Solution'}
-              </h2>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {locale === 'es'
-                  ? 'Cómo abordé y resolví el problema...'
-                  : 'How I approached and solved the problem...'}
-              </p>
-            </section>
+            {project.solution && (
+              <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8 hover-lift">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Lightbulb className="w-6 h-6 text-yellow-500" />
+                  {locale === 'es' ? 'Solución' : 'Solution'}
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {t(project.solution)}
+                </p>
+              </section>
+            )}
+
+            {/* Arquitectura */}
+            {project.technicalDetails?.architecture && (
+              <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8 hover-lift">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Box className="w-6 h-6 text-purple-500" />
+                  {locale === 'es' ? 'Arquitectura' : 'Architecture'}
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {t(project.technicalDetails.architecture)}
+                </p>
+              </section>
+            )}
 
             {/* Stack detallado */}
-            <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8">
+            <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8 hover-lift">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                <Code2 className="w-6 h-6 text-purple-600" />
+                <Code2 className="w-6 h-6 text-blue-500" />
                 {locale === 'es' ? 'Stack Tecnológico' : 'Tech Stack'}
               </h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {project.techStack.map((tech) => (
-                  <div key={tech} className="flex items-center gap-3 p-3 bg-white dark:bg-gray-700 rounded-lg">
-                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                      <Code2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                    </div>
+                  <div key={tech} className="flex items-center gap-3 p-3 bg-white dark:bg-gray-700 rounded-lg hover-lift">
+                    {getTechIcon(tech)}
                     <span className="text-gray-900 dark:text-white font-medium">{tech}</span>
                   </div>
                 ))}
@@ -149,33 +174,53 @@ export default async function ProjectDetailPage({
             </section>
 
             {/* Retos */}
-            <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Target className="w-6 h-6 text-red-600" />
-                {locale === 'es' ? 'Retos' : 'Challenges'}
-              </h2>
-              <ul className="space-y-3">
-                {[1, 2, 3].map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-                    <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Descripción del reto {item}...</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            {project.technicalDetails?.challenges && (
+              <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8 hover-lift">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Target className="w-6 h-6 text-orange-500" />
+                  {locale === 'es' ? 'Retos' : 'Challenges'}
+                </h2>
+                <ul className="space-y-3">
+                  {project.technicalDetails.challenges[locale === 'es' ? 'es' : 'en'].map((challenge, i) => (
+                    <li key={i} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                      <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>{challenge}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Decisiones de diseño */}
+            {project.technicalDetails?.decisions && (
+              <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8 hover-lift">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Shield className="w-6 h-6 text-blue-500" />
+                  {locale === 'es' ? 'Decisiones de Diseño' : 'Design Decisions'}
+                </h2>
+                <ul className="space-y-3">
+                  {project.technicalDetails.decisions[locale === 'es' ? 'es' : 'en'].map((decision, i) => (
+                    <li key={i} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                      <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mt-2" />
+                      <span>{decision}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             {/* Resultados */}
-            <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Shield className="w-6 h-6 text-green-600" />
-                {locale === 'es' ? 'Resultados' : 'Results'}
-              </h2>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {locale === 'es'
-                  ? 'Métricas de rendimiento, feedback del cliente y lecciones aprendidas...'
-                  : 'Performance metrics, client feedback, and lessons learned...'}
-              </p>
-            </section>
+            {project.technicalDetails?.results && (
+              <section className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 md:p-8 hover-lift">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Shield className="w-6 h-6 text-green-500" />
+                  {locale === 'es' ? 'Resultados' : 'Results'}
+                </h2>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {t(project.technicalDetails.results)}
+                </p>
+              </section>
+            )}
           </div>
         </div>
       </main>

@@ -2,7 +2,6 @@ import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import FeaturedProjects from '@/components/FeaturedProjects';
 import Skills from '@/components/Skills';
-import Experience from '@/components/Experience';
 import AnimatedSection from '@/components/AnimatedSection';
 
 export default async function Home({
@@ -24,10 +23,6 @@ export default async function Home({
         
         <AnimatedSection animation="scale-in" delay={200}>
           <Skills locale={locale} />
-        </AnimatedSection>
-        
-        <AnimatedSection animation="slide-right" delay={300}>
-          <Experience locale={locale} />
         </AnimatedSection>
       </main>
     </>

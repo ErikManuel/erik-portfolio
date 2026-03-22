@@ -145,14 +145,16 @@ export default function Hero({ locale }: HeroProps) {
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
             <Link
               href={`/${locale}/projects`}
-              className="btn-primary hover-lift"
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all hover:scale-105"
             >
               {locale === 'es' ? 'Ver Proyectos' : 'View Projects'}
             </Link>
+            
+            {/* Botón de descarga de CV con idioma dinámico */}
             <a
-              href="/Erik_Manuel_CV.pdf"
-              download
-              className="btn-outline hover-lift"
+              href={locale === 'es' ? '/cv/Erik_Manuel_CV_ES.pdf' : '/cv/Erik_Manuel_CV_EN.pdf'}
+              download="Erik_Manuel_CV.pdf"
+              className="px-8 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-all hover:scale-105"
             >
               {locale === 'es' ? 'Descargar CV' : 'Download CV'}
             </a>
@@ -161,8 +163,8 @@ export default function Hero({ locale }: HeroProps) {
           {/* Developer Mode */}
           {mode === 'developer' && (
             <div className="mt-8 space-y-6 animate-fade-up delay-500">
+              {/* Terminal */}
               <div className="bg-gray-900 rounded-xl overflow-hidden shadow-2xl border border-gray-800">
-                {/* ... contenido de la terminal ... */}
                 <div className="flex items-center gap-2 px-4 py-3 bg-gray-800">
                   <Terminal className="w-4 h-4 text-gray-400" />
                   <span className="text-gray-400 text-sm">developer@erik:~/portfolio</span>
