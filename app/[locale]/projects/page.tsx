@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import { projects } from '@/lib/projects';
@@ -54,12 +55,21 @@ export default function ProjectsPage({
                   className="block cursor-pointer"
                 >
                   {/* Imagen del proyecto (placeholder) */}
-                  <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 dark:from-gray-700 dark:to-gray-600 relative flex items-center justify-center">
-                    <FolderGit2 className="w-12 h-12 text-blue-600 dark:text-blue-400 opacity-50 group-hover:opacity-100 transition-opacity" />
-                    
+                  <div className="aspect-video relative bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.title[locale === 'es' ? 'es' : 'en']}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+
+                    {/* Overlay de color suave para legibilidad */}
+                    <div className="absolute inset-0 bg-black/10 dark:bg-black/20" />
+
                     {/* Badge de destacado */}
                     {project.featured && (
-                      <span className="absolute top-4 right-4 px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded-full flex items-center gap-1">
+                      <span className="absolute top-4 right-4 z-10 px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded-full flex items-center gap-1">
                         <Sparkles className="w-3 h-3" />
                         {locale === 'es' ? 'Destacado' : 'Featured'}
                       </span>

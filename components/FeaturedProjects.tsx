@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { projects } from '@/lib/projects';
 
@@ -32,10 +33,15 @@ export default function FeaturedProjects({ locale }: FeaturedProjectsProps) {
                 href={`/${locale}/projects/${project.slug}`}
                 className="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden hover-lift"
               >
-              <div className="aspect-video bg-gray-200 dark:bg-gray-700 relative flex items-center justify-center">
-                <span className="text-4xl opacity-50 group-hover:opacity-100 transition-opacity">
-                  🚀
-                </span>
+              <div className="aspect-video relative overflow-hidden bg-gray-200 dark:bg-gray-700">
+                <Image
+                  src={project.image}
+                  alt={project.title[locale === 'es' ? 'es' : 'en']}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/10" />
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 transition-colors">

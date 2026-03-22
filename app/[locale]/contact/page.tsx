@@ -1,17 +1,18 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
 import Navbar from '@/components/Navbar';
 import { Mail, Github, Linkedin, MapPin, Phone, Send, CheckCircle, AlertCircle } from 'lucide-react';
-import { useState, useEffect } from 'react';
 
 export default function ContactPage({
   params,
 }: {
   params: Promise<{ locale: string }>
 }) {
-  const [locale, setLocale] = useState<string>('');
+  const [locale, setLocale] = useState('');
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     params.then(p => setLocale(p.locale));
@@ -43,12 +44,12 @@ export default function ContactPage({
       icon: Github,
       label: 'GitHub',
       username: '@erikmanuel',
-      href: 'https://github.com/erikmanuel'
+      href: 'https://github.com/ErikManuel'
     },
     {
       icon: Linkedin,
       label: 'LinkedIn',
-      username: 'erik-manuel',
+      username: 'erik-manuel-c',
       href: 'https://linkedin.com/in/erik-manuel-c-0b172911b'
     }
   ];
@@ -59,34 +60,24 @@ export default function ContactPage({
     setErrorMessage('');
 
     const formData = new FormData(e.currentTarget);
-    const data = {
-      first_name: formData.get('first_name'),
-      last_name: formData.get('last_name'),
-      email: formData.get('email'),
-      subject: formData.get('subject'),
-      message: formData.get('message'),
-    };
 
     try {
-      const response = await fetch('/api/contact', {
+      // Enviar el formulario a Formspree
+      await fetch('https://formspree.io/f/xnjgkjrw', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: formData,
+        mode: 'no-cors',
       });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        setFormStatus('sent');
-        e.currentTarget.reset();
-        setTimeout(() => setFormStatus('idle'), 5000);
-      } else {
-        setFormStatus('error');
-        setErrorMessage(result.error || 'Error al enviar el mensaje');
+      // Limpiar el formulario usando la referencia
+      if (formRef.current) {
+        formRef.current.reset();
       }
-    } catch {
+      
+      setFormStatus('sent');
+      setTimeout(() => setFormStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Error:', error);
       setFormStatus('error');
       setErrorMessage('Error de conexión. Intenta de nuevo.');
     }
@@ -94,19 +85,21 @@ export default function ContactPage({
 
   if (!locale) return null;
 
+  const isEs = locale === 'es';
+
   return (
     <>
       <Navbar locale={locale} />
       <main className="pt-24 pb-20 bg-white dark:bg-gray-950 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              {locale === 'es' ? 'Contacto' : 'Contact'}
+              {isEs ? 'Contacto' : 'Contact'}
             </h1>
             <div className="w-24 h-1 bg-blue-600 mx-auto mb-6"></div>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              {locale === 'es' 
+              {isEs 
                 ? '¿Tienes un proyecto en mente? ¿Quieres colaborar? Estoy a solo un mensaje de distancia.'
                 : 'Have a project in mind? Want to collaborate? I\'m just a message away.'}
             </p>
@@ -118,7 +111,7 @@ export default function ContactPage({
               {/* Información de contacto */}
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                  {locale === 'es' ? 'Información de contacto' : 'Contact information'}
+                  {isEs ? 'Información de contacto' : 'Contact information'}
                 </h2>
                 <div className="space-y-4">
                   {contactInfo.map((item, index) => {
@@ -149,7 +142,7 @@ export default function ContactPage({
               {/* Redes sociales */}
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">
-                  {locale === 'es' ? 'Redes sociales' : 'Social media'}
+                  {isEs ? 'Redes sociales' : 'Social media'}
                 </h2>
                 <div className="space-y-4">
                   {socialLinks.map((item, index) => {
@@ -176,10 +169,10 @@ export default function ContactPage({
               {/* Disponibilidad */}
               <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-xl p-6">
                 <h3 className="text-lg font-semibold mb-2">
-                  {locale === 'es' ? 'Disponibilidad' : 'Availability'}
+                  {isEs ? 'Disponibilidad' : 'Availability'}
                 </h3>
                 <p className="text-blue-100 mb-4">
-                  {locale === 'es' 
+                  {isEs 
                     ? 'Actualmente disponible para proyectos freelance y posiciones remotas.'
                     : 'Currently available for freelance projects and remote positions.'}
                 </p>
@@ -188,7 +181,7 @@ export default function ContactPage({
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                   </span>
-                  <span>{locale === 'es' ? 'Disponible para trabajar' : 'Available for work'}</span>
+                  <span>{isEs ? 'Disponible para trabajar' : 'Available for work'}</span>
                 </div>
               </div>
             </div>
@@ -197,36 +190,22 @@ export default function ContactPage({
             <div className="lg:col-span-2">
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                  {locale === 'es' ? 'Envíame un mensaje' : 'Send me a message'}
+                  {isEs ? 'Envíame un mensaje' : 'Send me a message'}
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Nombre */}
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {locale === 'es' ? 'Nombre' : 'First name'}
-                      </label>
-                      <input
-                        type="text"
-                        name="first_name"
-                        required
-                        className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
-                        placeholder={locale === 'es' ? 'Tu nombre' : 'Your name'}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {locale === 'es' ? 'Apellido' : 'Last name'}
-                      </label>
-                      <input
-                        type="text"
-                        name="last_name"
-                        required
-                        className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
-                        placeholder={locale === 'es' ? 'Tu apellido' : 'Your last name'}
-                      />
-                    </div>
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                  {/* Nombre completo */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {isEs ? 'Nombre completo' : 'Full name'}
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
+                      placeholder={isEs ? 'Tu nombre' : 'Your name'}
+                    />
                   </div>
 
                   {/* Email */}
@@ -246,28 +225,28 @@ export default function ContactPage({
                   {/* Asunto */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {locale === 'es' ? 'Asunto' : 'Subject'}
+                      {isEs ? 'Asunto' : 'Subject'}
                     </label>
                     <input
                       type="text"
                       name="subject"
                       required
                       className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white"
-                      placeholder={locale === 'es' ? '¿Sobre qué quieres hablar?' : 'What do you want to talk about?'}
+                      placeholder={isEs ? '¿Sobre qué quieres hablar?' : 'What do you want to talk about?'}
                     />
                   </div>
 
                   {/* Mensaje */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {locale === 'es' ? 'Mensaje' : 'Message'}
+                      {isEs ? 'Mensaje' : 'Message'}
                     </label>
                     <textarea
                       name="message"
                       required
                       rows={6}
                       className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white resize-none"
-                      placeholder={locale === 'es' ? 'Cuéntame sobre tu proyecto...' : 'Tell me about your project...'}
+                      placeholder={isEs ? 'Cuéntame sobre tu proyecto...' : 'Tell me about your project...'}
                     />
                   </div>
 
@@ -275,7 +254,7 @@ export default function ContactPage({
                   {formStatus === 'error' && (
                     <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-2 text-red-700 dark:text-red-300">
                       <AlertCircle className="w-5 h-5" />
-                      <span>{errorMessage || (locale === 'es' ? 'Error al enviar. Intenta de nuevo.' : 'Error sending. Try again.')}</span>
+                      <span>{errorMessage || (isEs ? 'Error al enviar. Intenta de nuevo.' : 'Error sending. Try again.')}</span>
                     </div>
                   )}
 
@@ -288,25 +267,25 @@ export default function ContactPage({
                     {formStatus === 'idle' && (
                       <>
                         <Send className="w-5 h-5" />
-                        {locale === 'es' ? 'Enviar mensaje' : 'Send message'}
+                        {isEs ? 'Enviar mensaje' : 'Send message'}
                       </>
                     )}
                     {formStatus === 'sending' && (
                       <>
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        {locale === 'es' ? 'Enviando...' : 'Sending...'}
+                        {isEs ? 'Enviando...' : 'Sending...'}
                       </>
                     )}
                     {formStatus === 'sent' && (
                       <>
                         <CheckCircle className="w-5 h-5" />
-                        {locale === 'es' ? '¡Mensaje enviado!' : 'Message sent!'}
+                        {isEs ? '¡Mensaje enviado!' : 'Message sent!'}
                       </>
                     )}
                   </button>
 
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                    {locale === 'es' 
+                    {isEs 
                       ? 'Recibirás una respuesta en menos de 24 horas.'
                       : 'You\'ll receive a response within 24 hours.'}
                   </p>

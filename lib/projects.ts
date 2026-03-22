@@ -13,7 +13,7 @@ export const projects: Project[] = [
       en: 'Full-featured e-commerce platform with product catalog, shopping cart, and checkout process. Built with Next.js and modern web practices.',
       es: 'Plataforma e-commerce completa con catálogo de productos, carrito de compras y proceso de pago. Construida con Next.js y prácticas modernas.',
     },
-    image: '/images/erikstore.jpg',
+    image: '/images/erikstore.webp',
     featured: true,
     techStack: ['Next.js', 'React', 'JavaScript', 'SCSS', 'Stripe'],
     problem: {
@@ -73,7 +73,7 @@ export const projects: Project[] = [
       en: 'Admin dashboard with role-based access control and user management. Perfect for tracking development metrics.',
       es: 'Panel administrativo con control de acceso basado en roles y gestión de usuarios. Ideal para métricas de desarrollo.',
     },
-    image: '/images/dashboard.jpg',
+    image: '/images/git_dashboard.webp',
     featured: true,
     techStack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Recharts', 'GitHub API'],
     problem: {
@@ -133,7 +133,7 @@ export const projects: Project[] = [
       en: 'Fullstack solution for water utility management. Includes billing, payment tracking, and customer management.',
       es: 'Solución fullstack para gestión de servicio de agua. Incluye facturación, seguimiento de pagos y gestión de clientes.',
     },
-    image: '/images/sapahu.jpg',
+    image: '/images/saphu.webp',
     featured: true,
     techStack: ['Next.js', 'Node.js', 'Express', 'MongoDB', 'JWT', 'PDFKit', 'Jest'],
     problem: {
