@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ThemeProvider, ModeProvider } from "@/contexts";
+import Footer from "@/components/Footer";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -36,20 +37,6 @@ export async function generateMetadata({
       title,
       description,
       siteName: 'Erik Manuel Portfolio',
-      images: [
-        {
-          url: '/og-image.png',
-          width: 1200,
-          height: 630,
-          alt: 'Erik Manuel - Frontend Developer',
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: ['/og-image.png'],
     },
     robots: {
       index: true,
@@ -77,6 +64,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <ModeProvider>
             {children}
+            <Footer locale={locale} />
           </ModeProvider>
         </ThemeProvider>
       </body>
