@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useMode } from '@/contexts/ModeContext';
 import { projects } from '@/lib/projects';
 
 interface FeaturedProjectsProps {
@@ -9,7 +8,6 @@ interface FeaturedProjectsProps {
 }
 
 export default function FeaturedProjects({ locale }: FeaturedProjectsProps) {
-  const { mode } = useMode();
   const featuredProjects = projects.filter(p => p.featured);
 
   return (

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMode } from '@/contexts/ModeContext';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Terminal, Cpu, GitBranch, Database, Box, Code2, Gauge, Zap, Shield } from 'lucide-react';
 
 interface HeroProps {
@@ -11,7 +11,6 @@ interface HeroProps {
 
 export default function Hero({ locale }: HeroProps) {
   const { mode } = useMode();
-  const [mounted, setMounted] = useState(false);
   const [history, setHistory] = useState<string[]>([
     locale === 'es' 
       ? 'Bienvenido al modo desarrollador. Escribe "help" para comandos.'
@@ -19,10 +18,6 @@ export default function Hero({ locale }: HeroProps) {
   ]);
   const [currentCommand, setCurrentCommand] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const commands = {
     help: {
@@ -90,8 +85,6 @@ export default function Hero({ locale }: HeroProps) {
       executeCommand(currentCommand);
     }
   };
-
-  if (!mounted) return null;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden bg-white dark:bg-gray-950">

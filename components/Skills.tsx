@@ -111,10 +111,10 @@ export default function Skills({ locale }: SkillsProps) {
             </div>
             <div className="space-y-2 font-mono text-sm">
               <p className="text-gray-300">{'{'}</p>
-              <p className="text-gray-300 ml-4">"frontend": ["React", "Next.js", "TypeScript", "Tailwind"],</p>
-              <p className="text-gray-300 ml-4">"backend": ["Node.js", "Express", "MongoDB"],</p>
-              <p className="text-gray-300 ml-4">"tools": ["Git", "Docker", "VS Code"],</p>
-              <p className="text-gray-300 ml-4">"soft_skills": ["Problem Solving", "Team Work", "Detail Oriented"]</p>
+              <p className="text-gray-300 ml-4">&quot;frontend&quot;: [&quot;React&quot;, &quot;Next.js&quot;, &quot;TypeScript&quot;, &quot;Tailwind&quot;],</p>
+              <p className="text-gray-300 ml-4">&quot;backend&quot;: [&quot;Node.js&quot;, &quot;Express&quot;, &quot;MongoDB&quot;],</p>
+              <p className="text-gray-300 ml-4">&quot;tools&quot;: [&quot;Git&quot;, &quot;Docker&quot;, &quot;VS Code&quot;],</p>
+              <p className="text-gray-300 ml-4">&quot;soft_skills&quot;: [&quot;Problem Solving&quot;, &quot;Team Work&quot;, &quot;Detail Oriented&quot;]</p>
               <p className="text-gray-300">{'}'}</p>
             </div>
           </div>

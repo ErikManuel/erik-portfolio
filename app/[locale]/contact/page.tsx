@@ -86,7 +86,7 @@ export default function ContactPage({
         setFormStatus('error');
         setErrorMessage(result.error || 'Error al enviar el mensaje');
       }
-    } catch (error) {
+    } catch {
       setFormStatus('error');
       setErrorMessage('Error de conexión. Intenta de nuevo.');
     }

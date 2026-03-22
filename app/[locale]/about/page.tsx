@@ -6,8 +6,8 @@ import {
   GraduationCap, Award, Languages, Briefcase, 
   Shield, Users, BookOpen, Target, Code2,
   Server, Database, GitBranch, FileText,
-  Calendar, MapPin, Building2, CheckCircle2,
-  ExternalLink, Linkedin, Mail, Phone
+  Calendar, CheckCircle2,
+  Linkedin, Mail, Phone
 } from 'lucide-react';
 
 export default function AboutPage({
